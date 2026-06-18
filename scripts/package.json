@@ -1,0 +1,11 @@
+{
+  "name": "easyride-seed",
+  "version": "1.0.0",
+  "description": "Firestore seed script for EasyRide",
+  "scripts": {
+    "seed": "node seed_firestore.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+# Place app logo and images here
+
+Add the following assets:
+- logo.png (APSRTC/EasyRide logo)
+- bus_icon.png
+- splash_background.png
+
+Update pubspec.yaml if you add images:
+```yaml
+flutter:
+  assets:
+    - assets/images/logo.png
+    - assets/images/bus_icon.png
+```
