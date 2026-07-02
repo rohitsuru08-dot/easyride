@@ -10,6 +10,8 @@ import 'package:easy_ride/providers/auth_provider.dart';
 import 'package:easy_ride/localization/localization_service.dart';
 import 'package:easy_ride/widgets/design_system.dart';
 import 'package:easy_ride/widgets/common/message_dialog.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
 import 'package:easy_ride/core/utils/date_time_helper.dart';
 
 class PassengerHomeScreen extends StatefulWidget {
@@ -25,6 +27,9 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
   String? _selectedDestination;
   DateTime? _selectedDate = DateTime.now();
 
+  Timer? _timeTimer;
+  late DateTime _visakhapatnamTime;
+
   late AnimationController _staggerController;
   late List<Animation<double>> _staggerFades;
   late List<Animation<Offset>> _staggerSlides;
@@ -32,6 +37,16 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
   @override
   void initState() {
     super.initState();
+
+    // Initialize Visakhapatnam time (IST = UTC + 5:30)
+    _visakhapatnamTime = DateTime.now().toUtc().add(const Duration(hours: 5, minutes: 30));
+    _timeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _visakhapatnamTime = DateTime.now().toUtc().add(const Duration(hours: 5, minutes: 30));
+        });
+      }
+    });
     _staggerController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -67,6 +82,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
 
   @override
   void dispose() {
+    _timeTimer?.cancel();
     _staggerController.dispose();
     super.dispose();
   }
@@ -332,43 +348,84 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.liquidCyan.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: AppColors.liquidCyan.withValues(alpha: 0.25),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        color: AppColors.liquidCyan,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.liquidCyan,
-                            blurRadius: 4,
+                        color: AppColors.liquidCyan.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.liquidCyan.withValues(alpha: 0.25),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: AppColors.liquidCyan,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.liquidCyan,
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              'Live • Routes Available',
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.liquidCyan,
+                                letterSpacing: 0.5,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Live • Routes Available',
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.liquidCyan,
-                        letterSpacing: 0.5,
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        width: 1,
                       ),
                     ),
-                  ],
-                ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.access_time_rounded,
+                          color: Colors.white70,
+                          size: 14,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${DateFormat('hh:mm:ss a').format(_visakhapatnamTime)} IST',
+                          style: AppTypography.labelMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 14),
               Text(
