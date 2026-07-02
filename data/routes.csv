@@ -1,0 +1,151 @@
+route_no,source,destination,frequency_min,estimated_fare
+VZ001,Railway Station,Jagadamba,27,53
+VZ002,Old Post Office,PM Palem,16,21
+VZ003,Jagadamba,Bheemili,13,46
+VZ004,Maddilapalem,Simhachalam,16,23
+VZ005,MVP Colony,Kancharapalem,26,40
+VZ006,PM Palem,Seethammadhara,28,57
+VZ007,Madhurawada,Steel Plant,21,28
+VZ008,Rushikonda,Anakapalle,11,39
+VZ009,Bheemili,Duvvada,20,29
+VZ010,Anandapuram,Airport,22,22
+VZ011,Pendurthi,Marikavalasa,25,15
+VZ012,Simhachalam,RTC Complex,14,39
+VZ013,Gopalapatnam,Jagadamba,10,55
+VZ014,NAD Junction,PM Palem,20,29
+VZ015,Kancharapalem,Bheemili,10,46
+VZ016,Arilova,Simhachalam,21,32
+VZ017,HB Colony,Kancharapalem,30,21
+VZ018,Seethammadhara,Seethammadhara,15,20
+VZ019,Gajuwaka,Steel Plant,22,38
+VZ020,Kurmannapalem,Anakapalle,27,21
+VZ021,Steel Plant,Duvvada,22,30
+VZ022,Parawada,Airport,20,30
+VZ023,Achutapuram,Marikavalasa,30,23
+VZ024,Anakapalle,RTC Complex,29,28
+VZ025,Sabbavaram,Jagadamba,18,12
+VZ026,Tagarapuvalasa,PM Palem,26,23
+VZ027,Duvvada,Bheemili,10,34
+VZ028,Scindia,Simhachalam,16,14
+VZ029,Pedagantyada,Kancharapalem,21,23
+VZ030,Airport,Seethammadhara,11,47
+VZ031,Sagar Nagar,Steel Plant,17,44
+VZ032,Endada,Anakapalle,10,11
+VZ033,Marikavalasa,Duvvada,16,21
+VZ034,Yendada,Airport,10,30
+VZ035,Lawsons Bay,Marikavalasa,30,59
+VZ036,RTC Complex,RTC Complex,18,44
+VZ037,Railway Station,Jagadamba,15,60
+VZ038,Old Post Office,PM Palem,20,35
+VZ039,Jagadamba,Bheemili,22,51
+VZ040,Maddilapalem,Simhachalam,26,13
+VZ041,MVP Colony,Kancharapalem,13,25
+VZ042,PM Palem,Seethammadhara,22,58
+VZ043,Madhurawada,Steel Plant,13,14
+VZ044,Rushikonda,Anakapalle,15,28
+VZ045,Bheemili,Duvvada,30,54
+VZ046,Anandapuram,Airport,15,46
+VZ047,Pendurthi,Marikavalasa,18,26
+VZ048,Simhachalam,RTC Complex,13,35
+VZ049,Gopalapatnam,Jagadamba,24,37
+VZ050,NAD Junction,PM Palem,28,11
+VZ051,Kancharapalem,Bheemili,12,18
+VZ052,Arilova,Simhachalam,12,58
+VZ053,HB Colony,Kancharapalem,24,12
+VZ054,Seethammadhara,Seethammadhara,27,26
+VZ055,Gajuwaka,Steel Plant,14,44
+VZ056,Kurmannapalem,Anakapalle,26,39
+VZ057,Steel Plant,Duvvada,16,23
+VZ058,Parawada,Airport,26,28
+VZ059,Achutapuram,Marikavalasa,28,53
+VZ060,Anakapalle,RTC Complex,26,36
+VZ061,Sabbavaram,Jagadamba,16,19
+VZ062,Tagarapuvalasa,PM Palem,28,58
+VZ063,Duvvada,Bheemili,14,13
+VZ064,Scindia,Simhachalam,29,28
+VZ065,Pedagantyada,Kancharapalem,13,47
+VZ066,Airport,Seethammadhara,21,26
+VZ067,Sagar Nagar,Steel Plant,27,50
+VZ068,Endada,Anakapalle,15,51
+VZ069,Marikavalasa,Duvvada,15,28
+VZ070,Yendada,Airport,21,41
+VZ071,Lawsons Bay,Marikavalasa,29,58
+VZ072,RTC Complex,RTC Complex,25,34
+VZ073,Railway Station,Jagadamba,21,43
+VZ074,Old Post Office,PM Palem,28,56
+VZ075,Jagadamba,Bheemili,20,11
+VZ076,Maddilapalem,Simhachalam,16,11
+VZ077,MVP Colony,Kancharapalem,24,52
+VZ078,PM Palem,Seethammadhara,25,24
+VZ079,Madhurawada,Steel Plant,23,51
+VZ080,Rushikonda,Anakapalle,16,45
+VZ081,Bheemili,Duvvada,23,43
+VZ082,Anandapuram,Airport,19,26
+VZ083,Pendurthi,Marikavalasa,20,18
+VZ084,Simhachalam,RTC Complex,29,35
+VZ085,Gopalapatnam,Jagadamba,12,18
+VZ086,NAD Junction,PM Palem,13,33
+VZ087,Kancharapalem,Bheemili,16,43
+VZ088,Arilova,Simhachalam,24,59
+VZ089,HB Colony,Kancharapalem,13,26
+VZ090,Seethammadhara,Seethammadhara,22,20
+VZ091,Gajuwaka,Steel Plant,24,21
+VZ092,Kurmannapalem,Anakapalle,21,43
+VZ093,Steel Plant,Duvvada,11,53
+VZ094,Parawada,Airport,20,35
+VZ095,Achutapuram,Marikavalasa,13,60
+VZ096,Anakapalle,RTC Complex,14,54
+VZ097,Sabbavaram,Jagadamba,19,50
+VZ098,Tagarapuvalasa,PM Palem,12,21
+VZ099,Duvvada,Bheemili,30,27
+VZ100,Scindia,Simhachalam,13,14
+VZ101,Pedagantyada,Kancharapalem,23,50
+VZ102,Airport,Seethammadhara,17,50
+VZ103,Sagar Nagar,Steel Plant,16,45
+VZ104,Endada,Anakapalle,16,29
+VZ105,Marikavalasa,Duvvada,21,30
+VZ106,Yendada,Airport,19,28
+VZ107,Lawsons Bay,Marikavalasa,30,25
+VZ108,RTC Complex,RTC Complex,21,58
+VZ109,Railway Station,Jagadamba,21,46
+VZ110,Old Post Office,PM Palem,10,19
+VZ111,Jagadamba,Bheemili,22,51
+VZ112,Maddilapalem,Simhachalam,19,36
+VZ113,MVP Colony,Kancharapalem,16,23
+VZ114,PM Palem,Seethammadhara,20,41
+VZ115,Madhurawada,Steel Plant,11,51
+VZ116,Rushikonda,Anakapalle,24,22
+VZ117,Bheemili,Duvvada,27,23
+VZ118,Anandapuram,Airport,20,36
+VZ119,Pendurthi,Marikavalasa,23,10
+VZ120,Simhachalam,RTC Complex,24,41
+VZ121,Gopalapatnam,Jagadamba,25,56
+VZ122,NAD Junction,PM Palem,15,52
+VZ123,Kancharapalem,Bheemili,12,49
+VZ124,Arilova,Simhachalam,28,43
+VZ125,HB Colony,Kancharapalem,28,33
+VZ126,Seethammadhara,Seethammadhara,12,10
+VZ127,Gajuwaka,Steel Plant,18,33
+VZ128,Kurmannapalem,Anakapalle,23,36
+VZ129,Steel Plant,Duvvada,10,34
+VZ130,Parawada,Airport,13,22
+VZ131,Achutapuram,Marikavalasa,30,14
+VZ132,Anakapalle,RTC Complex,15,36
+VZ133,Sabbavaram,Jagadamba,20,29
+VZ134,Tagarapuvalasa,PM Palem,29,46
+VZ135,Duvvada,Bheemili,19,59
+VZ136,Scindia,Simhachalam,12,38
+VZ137,Pedagantyada,Kancharapalem,21,28
+VZ138,Airport,Seethammadhara,13,36
+VZ139,Sagar Nagar,Steel Plant,10,27
+VZ140,Endada,Anakapalle,10,11
+VZ141,Marikavalasa,Duvvada,22,53
+VZ142,Yendada,Airport,10,52
+VZ143,Lawsons Bay,Marikavalasa,20,47
+VZ144,RTC Complex,RTC Complex,14,38
+VZ145,Railway Station,Jagadamba,27,52
+VZ146,Old Post Office,PM Palem,21,48
+VZ147,Jagadamba,Bheemili,23,44
+VZ148,Maddilapalem,Simhachalam,25,18
+VZ149,MVP Colony,Kancharapalem,22,53
+VZ150,PM Palem,Seethammadhara,20,13
