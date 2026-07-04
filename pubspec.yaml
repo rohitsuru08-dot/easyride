@@ -57,6 +57,7 @@ flutter:
   assets:
     - assets/images/
     - assets/localization/
+    - assets/data/
 
   # Fonts (Optional - using default Material fonts)
   # fonts:

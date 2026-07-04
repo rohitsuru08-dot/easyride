@@ -1,0 +1,189 @@
+import 'dart:math';
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_ride/core/constants/firestore_constants.dart';
+import 'package:easy_ride/models/route_model.dart';
+import 'package:easy_ride/models/bus_model.dart';
+
+class DataSeeder {
+  static Future<void> seed() async {
+    print('--- Starting Data Seeder ---');
+    final firestore = FirebaseFirestore.instance;
+    final random = Random();
+
+    // 1. Delete existing routes and buses
+    print('Deleting existing data...');
+    var routesSnap = await firestore.collection(FirestoreConstants.routesCollection).get();
+    var batch = firestore.batch();
+    int batchCount = 0;
+    
+    for (var doc in routesSnap.docs) {
+      batch.delete(doc.reference);
+      batchCount++;
+      if (batchCount >= 400) {
+        await batch.commit();
+        batch = firestore.batch();
+        batchCount = 0;
+      }
+    }
+    
+    var busesSnap = await firestore.collection(FirestoreConstants.busesCollection).get();
+    for (var doc in busesSnap.docs) {
+      batch.delete(doc.reference);
+      batchCount++;
+      if (batchCount >= 400) {
+        await batch.commit();
+        batch = firestore.batch();
+        batchCount = 0;
+      }
+    }
+    if (batchCount > 0) {
+      await batch.commit();
+    }
+
+    // 2. Read routes.csv to get fares
+    print('Reading routes.csv...');
+    final routesCsvString = await rootBundle.loadString('assets/data/routes.csv');
+    final routesLines = routesCsvString.split('\n');
+    
+    final Map<String, double> routeFares = {};
+    for (int i = 1; i < routesLines.length; i++) {
+      final line = routesLines[i];
+      if (line.trim().isEmpty) continue;
+      final parts = line.split(',');
+      if (parts.length >= 5) {
+        final routeNo = parts[0].trim();
+        final fare = double.tryParse(parts[4].trim()) ?? 0.0;
+        routeFares[routeNo] = fare;
+      }
+    }
+
+    // 3. Read routes1.csv to create routes
+    print('Reading routes1.csv...');
+    final routes1CsvString = await rootBundle.loadString('assets/data/routes1.csv');
+    final routes1Lines = routes1CsvString.split('\n');
+    
+    final List<RouteModel> createdRoutes = [];
+    final Map<String, RouteModel> routeMap = {}; // routeNo -> RouteModel
+
+    for (int i = 1; i < routes1Lines.length; i++) {
+      final line = routes1Lines[i];
+      if (line.trim().isEmpty) continue;
+      final parts = line.split(',');
+      if (parts.length >= 3) {
+        final routeNo = parts[0].trim();
+        final source = parts[1].trim();
+        final destination = parts[2].trim();
+        
+        final routeId = routeNo;
+        final routeName = '$source - $destination';
+        
+        final route = RouteModel(
+          routeId: routeId,
+          routeName: routeName,
+          source: source,
+          destination: destination,
+          distance: 15.0, // Default distance
+          stops: [source, destination], // Default stops
+          active: true,
+        );
+        
+        createdRoutes.add(route);
+        routeMap[routeNo] = route;
+      }
+    }
+
+    print('Uploading ${createdRoutes.length} routes...');
+    batch = firestore.batch();
+    batchCount = 0;
+    for (var route in createdRoutes) {
+      batch.set(
+        firestore.collection(FirestoreConstants.routesCollection).doc(route.routeId),
+        route.toMap(),
+      );
+      batchCount++;
+      if (batchCount >= 400) {
+        await batch.commit();
+        batch = firestore.batch();
+        batchCount = 0;
+      }
+    }
+    if (batchCount > 0) {
+      await batch.commit();
+    }
+
+    // 4. Read schedules.csv to create buses
+    print('Reading schedules.csv...');
+    final schedulesCsvString = await rootBundle.loadString('assets/data/schedules.csv');
+    final schedulesLines = schedulesCsvString.split('\n');
+    
+    int busesCreated = 0;
+    batch = firestore.batch();
+    batchCount = 0;
+    
+    for (int i = 1; i < schedulesLines.length; i++) {
+      final line = schedulesLines[i];
+      if (line.trim().isEmpty) continue;
+      final parts = line.split(',');
+      if (parts.length >= 4) {
+        final routeNo = parts[0].trim();
+        final departureTime = parts[1].trim(); // HH:mm
+        
+        if (!routeMap.containsKey(routeNo)) continue;
+        
+        final route = routeMap[routeNo]!;
+        final fare = routeFares[routeNo] ?? 30.0;
+        
+        // Calculate arrival time (approx + 1 hour)
+        String arrivalTime = '00:00';
+        try {
+          final timeParts = departureTime.split(':');
+          if (timeParts.length == 2) {
+            int h = int.parse(timeParts[0]);
+            int m = int.parse(timeParts[1]);
+            h = (h + 1) % 24;
+            arrivalTime = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
+          }
+        } catch (_) {}
+        
+        final randomNum = 1000 + random.nextInt(9000);
+        final busNumber = 'AP 31 Z $randomNum';
+        
+        final safeRouteNo = routeNo.replaceAll('/', '-');
+        final busId = '${safeRouteNo}_${departureTime.replaceAll(':', '')}';
+        
+        final bus = BusModel(
+          busId: busId,
+          busNumber: busNumber,
+          busType: 'Ordinary',
+          capacity: 40,
+          routeId: routeNo,
+          departureTime: departureTime,
+          arrivalTime: arrivalTime,
+          fare: fare,
+          active: true,
+        );
+        
+        batch.set(
+          firestore.collection(FirestoreConstants.busesCollection).doc(busId),
+          bus.toMap(),
+        );
+        batchCount++;
+        busesCreated++;
+        
+        if (batchCount >= 400) {
+          await batch.commit();
+          batch = firestore.batch();
+          batchCount = 0;
+        }
+      }
+    }
+    
+    if (batchCount > 0) {
+      await batch.commit();
+    }
+    
+    print('Created $busesCreated buses.');
+    print('--- Data Seeder Completed ---');
+  }
+}
