@@ -143,6 +143,29 @@ class _LoginScreenState extends State<LoginScreen>
     await _loadUserAndNavigate(userProvider, authProvider, email);
   }
 
+  Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    final success = await authProvider.signInWithGoogle();
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (!success) {
+      MessageDialog.showError(
+        context,
+        message: authProvider.errorMessage ?? 'Google Sign-In failed',
+      );
+      return;
+    }
+
+    final email = authProvider.currentUser?.email ?? 'Unknown';
+    await _loadUserAndNavigate(userProvider, authProvider, email);
+  }
+
   Future<void> _loadUserAndNavigate(
     UserProvider userProvider,
     AuthProvider authProvider,
@@ -480,6 +503,68 @@ class _LoginScreenState extends State<LoginScreen>
                     ? Icons.person_add_rounded
                     : Icons.login_rounded,
               ),
+              const SizedBox(height: 16),
+              
+              Row(
+                children: [
+                  Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.2))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'OR',
+                      style: AppTypography.captionSmall.copyWith(color: AppColors.textTertiary),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.2))),
+                ],
+              ),
+              
+              const SizedBox(height: 16),
+
+              // Google Sign In button (Official Style)
+              SizedBox(
+                height: 52,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black87,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                  child: _isLoading 
+                    ? const SizedBox(
+                        width: 24, 
+                        height: 24, 
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/google_logo.png',
+                            height: 24,
+                            width: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          const Text(
+                            'Sign in with Google',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                        ],
+                      ),
+                ),
+              ),
+
               const SizedBox(height: 20),
 
               // Toggle mode

@@ -4,6 +4,7 @@
 //       and revert auth_provider.dart and login_screen.dart similarly.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -179,6 +180,35 @@ class AuthService {
     }
   }
 
+  // ─── GOOGLE SIGN-IN ──────────────────────────────────────────────────────────
+
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        throw Exception('Google sign-in aborted.');
+      }
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Create a new credential
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await _auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw Exception('[${e.code}] ${e.message}');
+    } catch (e) {
+      throw Exception('Google sign-in failed: $e');
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────────────────
 
   User? get currentUser => _auth.currentUser;
@@ -190,6 +220,7 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await _auth.signOut();
+      await GoogleSignIn().signOut();
       // _verificationId = null;       // uncomment with OTP
       // _resendToken = null;           // uncomment with OTP
       // _webConfirmationResult = null; // uncomment with OTP

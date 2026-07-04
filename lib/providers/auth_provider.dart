@@ -81,6 +81,25 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> signInWithGoogle() async {
+    try {
+      _status = AuthStatus.loading;
+      _errorMessage = null;
+      notifyListeners();
+
+      final userCredential = await _authService.signInWithGoogle();
+      _currentUser = userCredential.user;
+      _status = AuthStatus.authenticated;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _status = AuthStatus.error;
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      notifyListeners();
+      return false;
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────────────────
 
   // ─── PHONE OTP AUTH — temporarily disabled ────────────────────────────────
