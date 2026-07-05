@@ -1,118 +1,23 @@
-# ── OS ──────────────────────────────────────────────────────────────────────
+# Ignore Markdown files
+*.md
+
+# Flutter build/cache
+.dart_tool/
+.pub/
+.pub-cache/
+build/
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
 .DS_Store
 Thumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-ehthumbs.db
 
-# ── IDEs ────────────────────────────────────────────────────────────────────
-.idea/
-*.iml
-*.ipr
-*.iws
-.vscode/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-.atom/
-.history/
+# Machine-specific
+android/local.properties
 
-# ── Flutter / Dart ──────────────────────────────────────────────────────────
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-.pub/
-/build/
-**/doc/api/
-**/ios/Flutter/.last_build_id
-*.dart_snapshot
-dart_test.yaml
-
-# ── Android ─────────────────────────────────────────────────────────────────
-/android/app/debug/
-/android/app/profile/
-/android/app/release/
-/android/.gradle/
-/android/captures/
-/android/local.properties
-/android/key.properties
-*.keystore
-*.jks
-
-# ── iOS / macOS ──────────────────────────────────────────────────────────────
-ios/Pods/
-ios/.symlinks/
-macos/Pods/
-macos/.symlinks/
-*.xcworkspace/
-xcuserdata/
-*.moved-aside
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-
-# ── Web ──────────────────────────────────────────────────────────────────────
-web/.dart_tool/
-
-# ── Node.js (root scripts + web tooling) ────────────────────────────────────
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.pnp.*
-.yarn/cache
-.yarn/unplugged
-.yarn/install-state.gz
-
-# ── Firebase ─────────────────────────────────────────────────────────────────
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
-macos/Runner/GoogleService-Info.plist
-.firebase/
-firebase-debug.log
-firestore-debug.log
-ui-debug.log
-database-debug.log
-pubsub-debug.log
-.firebaserc
-
-# ── Secrets / credentials ────────────────────────────────────────────────────
+# Secrets
 .env
-.env.*
-!.env.example
-secrets/
-**/serviceAccountKey.json
-*.pem
-*.p8
-*.p12
-*.cer
-*.mobileprovision
-
-# ── Build artefacts ───────────────────────────────────────────────────────────
-*.class
-*.log
-*.pyc
-*.swp
-*.o
-*.so
-*.exe
-*.dll
-*.a
-*.lib
-app.*.symbols
-app.*.map.json
-
-# ── Misc ─────────────────────────────────────────────────────────────────────
-.buildlog/
-.svn/
-migrate_working_dir/
-coverage/
+*serviceAccountKey*.json
