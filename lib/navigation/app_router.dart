@@ -4,6 +4,7 @@ import 'package:easy_ride/core/constants/route_constants.dart';
 import 'package:easy_ride/screens/auth/splash_screen.dart';
 import 'package:easy_ride/screens/auth/login_screen.dart';
 import 'package:easy_ride/screens/auth/otp_verification_screen.dart';
+import 'package:easy_ride/screens/auth/email_verification_screen.dart';
 import 'package:easy_ride/screens/passenger/home_screen.dart';
 import 'package:easy_ride/screens/passenger/bus_list_screen.dart';
 import 'package:easy_ride/screens/passenger/booking_summary_screen.dart';
@@ -32,6 +33,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => OtpVerificationScreen(phoneNumber: phoneNumber),
         );
+
+      case RouteConstants.emailVerification:
+        return MaterialPageRoute(builder: (_) => const EmailVerificationScreen());
 
       // Passenger routes
       case RouteConstants.passengerHome:

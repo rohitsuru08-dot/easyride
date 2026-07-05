@@ -108,7 +108,11 @@ class _SplashScreenState extends State<SplashScreen>
       }
 
       if (userProvider.currentUser != null) {
-        _navigateToHome(userProvider.userRole!);
+        if (!authProvider.currentUser!.emailVerified) {
+          Navigator.of(context).pushReplacementNamed(RouteConstants.emailVerification);
+        } else {
+          _navigateToHome(userProvider.userRole!);
+        }
       } else {
         _navigateToLogin();
       }

@@ -70,6 +70,11 @@ class AuthProvider with ChangeNotifier {
 
       final userCredential = await _authService.registerWithEmail(email, password);
       _currentUser = userCredential.user;
+      
+      if (_currentUser != null && !_currentUser!.emailVerified) {
+        await _currentUser!.sendEmailVerification();
+      }
+
       _status = AuthStatus.authenticated;
       notifyListeners();
       return true;

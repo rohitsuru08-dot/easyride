@@ -309,22 +309,44 @@ class _BusCardState extends State<_BusCard> {
       widget.bus.arrivalTime,
     );
 
+    bool isPast = false;
+    if (routeProvider.selectedDate != null) {
+      final now = DateTime.now();
+      final selectedDate = routeProvider.selectedDate!;
+      
+      if (selectedDate.year == now.year &&
+          selectedDate.month == now.month &&
+          selectedDate.day == now.day) {
+        final timeParts = widget.bus.departureTime.split(':');
+        if (timeParts.length == 2) {
+          final hours = int.tryParse(timeParts[0]) ?? 0;
+          final minutes = int.tryParse(timeParts[1]) ?? 0;
+          final busTime = DateTime(now.year, now.month, now.day, hours, minutes);
+          if (now.isAfter(busTime)) {
+            isPast = true;
+          }
+        }
+      } else if (selectedDate.isBefore(DateTime(now.year, now.month, now.day))) {
+        isPast = true;
+      }
+    }
+
     return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
+      onTapDown: isPast ? null : (_) => setState(() => _isPressed = true),
+      onTapUp: isPast ? null : (_) => setState(() => _isPressed = false),
+      onTapCancel: isPast ? null : () => setState(() => _isPressed = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         transform: Matrix4.identity()..scale(_isPressed ? 0.97 : 1.0),
         margin: const EdgeInsets.only(bottom: 14),
         decoration: BoxDecoration(
-          color: const Color(0xFF192134),
+          color: isPast ? const Color(0xFF131926) : const Color(0xFF192134),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.07),
+            color: Colors.white.withValues(alpha: isPast ? 0.03 : 0.07),
             width: 1,
           ),
-          boxShadow: [
+          boxShadow: isPast ? [] : [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.25),
               blurRadius: 16,
@@ -343,15 +365,17 @@ class _BusCardState extends State<_BusCard> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
-                      ),
+                      gradient: isPast
+                          ? const LinearGradient(colors: [Colors.grey, Colors.grey])
+                          : const LinearGradient(
+                              colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+                            ),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       widget.bus.busType,
                       style: AppTypography.labelSmall.copyWith(
-                        color: Colors.white,
+                        color: isPast ? Colors.white70 : Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -360,7 +384,7 @@ class _BusCardState extends State<_BusCard> {
                   Text(
                     widget.bus.busNumber,
                     style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
+                      color: isPast ? AppColors.textTertiary : AppColors.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -390,7 +414,7 @@ class _BusCardState extends State<_BusCard> {
                         Text(
                           DateTimeHelper.formatTimeString(widget.bus.departureTime),
                           style: AppTypography.titleLarge.copyWith(
-                            color: AppColors.textPrimary,
+                            color: isPast ? AppColors.textTertiary : AppColors.textPrimary,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.5,
                           ),
@@ -423,19 +447,21 @@ class _BusCardState extends State<_BusCard> {
                             height: 6,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppColors.liquidCyan,
+                              color: isPast ? Colors.grey : AppColors.liquidCyan,
                             ),
                           ),
                           Container(
                             width: 50,
                             height: 1.5,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFF00E5FF),
-                                  Color(0xFF2563EB),
-                                ],
-                              ),
+                            decoration: BoxDecoration(
+                              gradient: isPast
+                                  ? const LinearGradient(colors: [Colors.grey, Colors.grey])
+                                  : const LinearGradient(
+                                      colors: [
+                                        Color(0xFF00E5FF),
+                                        Color(0xFF2563EB),
+                                      ],
+                                    ),
                             ),
                           ),
                           Container(
@@ -443,7 +469,7 @@ class _BusCardState extends State<_BusCard> {
                             height: 6,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: const Color(0xFF10B981),
+                              color: isPast ? Colors.grey : const Color(0xFF10B981),
                             ),
                           ),
                         ],
@@ -459,7 +485,7 @@ class _BusCardState extends State<_BusCard> {
                         Text(
                           DateTimeHelper.formatTimeString(widget.bus.arrivalTime),
                           style: AppTypography.titleLarge.copyWith(
-                            color: AppColors.textPrimary,
+                            color: isPast ? AppColors.textTertiary : AppColors.textPrimary,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.5,
                           ),
@@ -504,14 +530,14 @@ class _BusCardState extends State<_BusCard> {
                           Text(
                             '₹',
                             style: AppTypography.bodyMedium.copyWith(
-                              color: AppColors.success,
+                              color: isPast ? AppColors.textTertiary : AppColors.success,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
                             widget.bus.fare.toStringAsFixed(0),
                             style: AppTypography.headlineSmall.copyWith(
-                              color: AppColors.success,
+                              color: isPast ? AppColors.textTertiary : AppColors.success,
                               fontWeight: FontWeight.w800,
                               letterSpacing: -0.5,
                             ),
@@ -521,7 +547,7 @@ class _BusCardState extends State<_BusCard> {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: isPast ? null : () {
                       routeProvider.selectBus(widget.bus);
                       Navigator.of(context).pushNamed(
                         RouteConstants.bookingSummary,
@@ -531,13 +557,15 @@ class _BusCardState extends State<_BusCard> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 12),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: isPast
+                            ? const LinearGradient(colors: [Color(0xFF424242), Color(0xFF212121)])
+                            : const LinearGradient(
+                                colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
                         borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
+                        boxShadow: isPast ? [] : [
                           BoxShadow(
                             color: const Color(0xFF2563EB).withValues(alpha: 0.4),
                             blurRadius: 12,
@@ -547,13 +575,16 @@ class _BusCardState extends State<_BusCard> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.flash_on_rounded,
-                              color: Colors.white, size: 16),
+                          Icon(
+                            isPast ? Icons.time_to_leave_rounded : Icons.flash_on_rounded,
+                            color: isPast ? Colors.white54 : Colors.white, 
+                            size: 16,
+                          ),
                           const SizedBox(width: 6),
                           Text(
-                            'book_now'.tr(context),
+                            isPast ? 'Departed' : 'book_now'.tr(context),
                             style: AppTypography.labelMedium.copyWith(
-                              color: Colors.white,
+                              color: isPast ? Colors.white54 : Colors.white,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.3,
                             ),

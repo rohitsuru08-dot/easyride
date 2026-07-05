@@ -4,6 +4,7 @@ class RouteConstants {
   static const String splash = '/';
   static const String login = '/login';
   static const String otpVerification = '/otp-verification';
+  static const String emailVerification = '/email-verification';
   
   // Passenger Routes
   static const String passengerHome = '/passenger/home';

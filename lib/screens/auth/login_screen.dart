@@ -205,6 +205,12 @@ class _LoginScreenState extends State<LoginScreen>
       }
     }
 
+    if (!authProvider.currentUser!.emailVerified) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          RouteConstants.emailVerification, (route) => false);
+      return;
+    }
+
     _navigateToHome(userProvider.userRole ?? FirestoreConstants.rolePassenger);
   }
 
