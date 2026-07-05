@@ -112,44 +112,38 @@ class DataSeeder {
       await batch.commit();
     }
 
-    // 4. Read schedules.csv to create buses
-    print('Reading schedules.csv...');
-    final schedulesCsvString = await rootBundle.loadString('assets/data/schedules.csv');
-    final schedulesLines = schedulesCsvString.split('\n');
-    
+    // 4. Generate 10 buses for each route with time gaps
+    print('Generating 10 buses per route...');
     int busesCreated = 0;
     batch = firestore.batch();
     batchCount = 0;
     
-    for (int i = 1; i < schedulesLines.length; i++) {
-      final line = schedulesLines[i];
-      if (line.trim().isEmpty) continue;
-      final parts = line.split(',');
-      if (parts.length >= 4) {
-        final routeNo = parts[0].trim();
-        final departureTime = parts[1].trim(); // HH:mm
+    for (var route in createdRoutes) {
+      final fare = routeFares[route.routeId] ?? 30.0;
+      final int numBuses = 10;
+      
+      // Start time between 5 AM and 7 AM
+      int currentHour = 5 + random.nextInt(3); 
+      int currentMinute = random.nextBool() ? 0 : 30;
+      
+      for (int b = 0; b < numBuses; b++) {
+        // Time gap of 1 to 2 hours between buses
+        if (b > 0) {
+          currentHour += 1 + random.nextInt(2);
+          if (random.nextBool()) currentMinute = (currentMinute + 30) % 60;
+          if (currentHour >= 24) currentHour = currentHour % 24;
+        }
         
-        if (!routeMap.containsKey(routeNo)) continue;
+        String departureTime = '${currentHour.toString().padLeft(2, '0')}:${currentMinute.toString().padLeft(2, '0')}';
         
-        final route = routeMap[routeNo]!;
-        final fare = routeFares[routeNo] ?? 30.0;
-        
-        // Calculate arrival time (approx + 1 hour)
-        String arrivalTime = '00:00';
-        try {
-          final timeParts = departureTime.split(':');
-          if (timeParts.length == 2) {
-            int h = int.parse(timeParts[0]);
-            int m = int.parse(timeParts[1]);
-            h = (h + 1) % 24;
-            arrivalTime = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
-          }
-        } catch (_) {}
+        // Arrival time is 1 to 2 hours after departure
+        int arrivalHour = (currentHour + 1 + random.nextInt(2)) % 24;
+        String arrivalTime = '${arrivalHour.toString().padLeft(2, '0')}:${currentMinute.toString().padLeft(2, '0')}';
         
         final randomNum = 1000 + random.nextInt(9000);
         final busNumber = 'AP 31 Z $randomNum';
         
-        final safeRouteNo = routeNo.replaceAll('/', '-');
+        final safeRouteNo = route.routeId.replaceAll('/', '-');
         final busId = '${safeRouteNo}_${departureTime.replaceAll(':', '')}';
         
         final bus = BusModel(
@@ -157,7 +151,7 @@ class DataSeeder {
           busNumber: busNumber,
           busType: 'Ordinary',
           capacity: 40,
-          routeId: routeNo,
+          routeId: route.routeId,
           departureTime: departureTime,
           arrivalTime: arrivalTime,
           fare: fare,

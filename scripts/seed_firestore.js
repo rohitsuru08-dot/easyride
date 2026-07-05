@@ -235,266 +235,32 @@ const routes = [
 
 ];
 
-const buses = [
-
-  // ── route_001: MVP Colony → Gajuwaka (15 km) ─────────────────────────────
-  {
-    id: 'bus_001', busId: 'bus_001', busNumber: 'AP39Z-1234',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_001',
-    departureTime: '06:30', arrivalTime: '07:30', fare: 20, active: true,
-  },
-  {
-    id: 'bus_002', busId: 'bus_002', busNumber: 'AP39Z-5678',
-    busType: 'Express', capacity: 45, routeId: 'route_001',
-    departureTime: '09:00', arrivalTime: '09:45', fare: 30, active: true,
-  },
-  {
-    id: 'bus_003', busId: 'bus_003', busNumber: 'AP39Z-9012',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_001',
-    departureTime: '17:30', arrivalTime: '18:30', fare: 20, active: true,
-  },
-
-  // ── route_002: Gajuwaka → MVP Colony (15 km) ─────────────────────────────
-  {
-    id: 'bus_004', busId: 'bus_004', busNumber: 'AP39Z-2211',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_002',
-    departureTime: '07:00', arrivalTime: '08:00', fare: 20, active: true,
-  },
-  {
-    id: 'bus_005', busId: 'bus_005', busNumber: 'AP39Z-4433',
-    busType: 'Express', capacity: 45, routeId: 'route_002',
-    departureTime: '18:00', arrivalTime: '18:45', fare: 30, active: true,
-  },
-
-  // ── route_003: RTC Complex → Steel Plant (14 km) ─────────────────────────
-  {
-    id: 'bus_006', busId: 'bus_006', busNumber: 'AP39W-1122',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_003',
-    departureTime: '07:30', arrivalTime: '08:30', fare: 20, active: true,
-  },
-  {
-    id: 'bus_007', busId: 'bus_007', busNumber: 'AP39W-3344',
-    busType: 'Express', capacity: 45, routeId: 'route_003',
-    departureTime: '17:00', arrivalTime: '17:50', fare: 25, active: true,
-  },
-
-  // ── route_004: Steel Plant → RTC Complex (14 km) ─────────────────────────
-  {
-    id: 'bus_008', busId: 'bus_008', busNumber: 'AP39W-5566',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_004',
-    departureTime: '06:00', arrivalTime: '07:00', fare: 20, active: true,
-  },
-  {
-    id: 'bus_009', busId: 'bus_009', busNumber: 'AP39W-7788',
-    busType: 'Express', capacity: 45, routeId: 'route_004',
-    departureTime: '16:30', arrivalTime: '17:20', fare: 25, active: true,
-  },
-
-  // ── route_005: RTC Complex → Bheemunipatnam (26 km) ──────────────────────
-  {
-    id: 'bus_010', busId: 'bus_010', busNumber: 'AP39Z-9900',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_005',
-    departureTime: '08:00', arrivalTime: '09:15', fare: 35, active: true,
-  },
-  {
-    id: 'bus_011', busId: 'bus_011', busNumber: 'AP39Z-1010',
-    busType: 'Express', capacity: 45, routeId: 'route_005',
-    departureTime: '14:00', arrivalTime: '15:00', fare: 45, active: true,
-  },
-
-  // ── route_006: Bheemunipatnam → RTC Complex (26 km) ──────────────────────
-  {
-    id: 'bus_012', busId: 'bus_012', busNumber: 'AP39Z-2020',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_006',
-    departureTime: '06:30', arrivalTime: '07:45', fare: 35, active: true,
-  },
-  {
-    id: 'bus_013', busId: 'bus_013', busNumber: 'AP39Z-3030',
-    busType: 'Express', capacity: 45, routeId: 'route_006',
-    departureTime: '17:30', arrivalTime: '18:30', fare: 45, active: true,
-  },
-
-  // ── route_007: RTC Complex → Kommadi (20 km) ─────────────────────────────
-  {
-    id: 'bus_014', busId: 'bus_014', busNumber: 'AP39W-4040',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_007',
-    departureTime: '07:00', arrivalTime: '08:00', fare: 25, active: true,
-  },
-  {
-    id: 'bus_015', busId: 'bus_015', busNumber: 'AP39W-5050',
-    busType: 'Express', capacity: 45, routeId: 'route_007',
-    departureTime: '16:00', arrivalTime: '16:50', fare: 35, active: true,
-  },
-
-  // ── route_008: Kommadi → RTC Complex (20 km) ─────────────────────────────
-  {
-    id: 'bus_016', busId: 'bus_016', busNumber: 'AP39W-6060',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_008',
-    departureTime: '08:30', arrivalTime: '09:30', fare: 25, active: true,
-  },
-  {
-    id: 'bus_017', busId: 'bus_017', busNumber: 'AP39W-7070',
-    busType: 'Express', capacity: 45, routeId: 'route_008',
-    departureTime: '18:00', arrivalTime: '18:50', fare: 35, active: true,
-  },
-
-  // ── route_009: Pendurthi → Gajuwaka (28 km) ──────────────────────────────
-  {
-    id: 'bus_018', busId: 'bus_018', busNumber: 'AP39X-1111',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_009',
-    departureTime: '06:00', arrivalTime: '07:20', fare: 40, active: true,
-  },
-  {
-    id: 'bus_019', busId: 'bus_019', busNumber: 'AP39X-2222',
-    busType: 'Express', capacity: 45, routeId: 'route_009',
-    departureTime: '09:00', arrivalTime: '10:05', fare: 50, active: true,
-  },
-
-  // ── route_010: Gajuwaka → Pendurthi (28 km) ──────────────────────────────
-  {
-    id: 'bus_020', busId: 'bus_020', busNumber: 'AP39X-3333',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_010',
-    departureTime: '07:30', arrivalTime: '08:50', fare: 40, active: true,
-  },
-  {
-    id: 'bus_021', busId: 'bus_021', busNumber: 'AP39X-4444',
-    busType: 'Express', capacity: 45, routeId: 'route_010',
-    departureTime: '17:00', arrivalTime: '18:05', fare: 50, active: true,
-  },
-
-  // ── route_011: MVP Colony → Steel Plant (22 km) ───────────────────────────
-  {
-    id: 'bus_022', busId: 'bus_022', busNumber: 'AP39Z-5555',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_011',
-    departureTime: '07:00', arrivalTime: '08:10', fare: 30, active: true,
-  },
-  {
-    id: 'bus_023', busId: 'bus_023', busNumber: 'AP39Z-6666',
-    busType: 'Express', capacity: 45, routeId: 'route_011',
-    departureTime: '16:00', arrivalTime: '17:00', fare: 40, active: true,
-  },
-
-  // ── route_012: Steel Plant → MVP Colony (22 km) ───────────────────────────
-  {
-    id: 'bus_024', busId: 'bus_024', busNumber: 'AP39Z-7777',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_012',
-    departureTime: '08:00', arrivalTime: '09:10', fare: 30, active: true,
-  },
-  {
-    id: 'bus_025', busId: 'bus_025', busNumber: 'AP39Z-8888',
-    busType: 'Express', capacity: 45, routeId: 'route_012',
-    departureTime: '17:30', arrivalTime: '18:30', fare: 40, active: true,
-  },
-
-  // ── route_013: RTC Complex → Simhachalam (18 km) ─────────────────────────
-  {
-    id: 'bus_026', busId: 'bus_026', busNumber: 'AP39X-5555',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_013',
-    departureTime: '06:00', arrivalTime: '06:55', fare: 20, active: true,
-  },
-  {
-    id: 'bus_027', busId: 'bus_027', busNumber: 'AP39X-6666',
-    busType: 'Express', capacity: 45, routeId: 'route_013',
-    departureTime: '14:30', arrivalTime: '15:15', fare: 30, active: true,
-  },
-
-  // ── route_014: Simhachalam → RTC Complex (18 km) ─────────────────────────
-  {
-    id: 'bus_028', busId: 'bus_028', busNumber: 'AP39X-7777',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_014',
-    departureTime: '07:00', arrivalTime: '07:55', fare: 20, active: true,
-  },
-  {
-    id: 'bus_029', busId: 'bus_029', busNumber: 'AP39X-8888',
-    busType: 'Express', capacity: 45, routeId: 'route_014',
-    departureTime: '16:00', arrivalTime: '16:45', fare: 30, active: true,
-  },
-
-  // ── route_015: Dwaraka Nagar → Bheemunipatnam (22 km) ────────────────────
-  {
-    id: 'bus_030', busId: 'bus_030', busNumber: 'AP39W-8080',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_015',
-    departureTime: '08:00', arrivalTime: '09:05', fare: 30, active: true,
-  },
-  {
-    id: 'bus_031', busId: 'bus_031', busNumber: 'AP39W-9090',
-    busType: 'Express', capacity: 45, routeId: 'route_015',
-    departureTime: '15:00', arrivalTime: '15:55', fare: 40, active: true,
-  },
-
-  // ── route_016: Bheemunipatnam → Dwaraka Nagar (22 km) ────────────────────
-  {
-    id: 'bus_032', busId: 'bus_032', busNumber: 'AP39W-1234',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_016',
-    departureTime: '07:00', arrivalTime: '08:05', fare: 30, active: true,
-  },
-  {
-    id: 'bus_033', busId: 'bus_033', busNumber: 'AP39W-5678',
-    busType: 'Express', capacity: 45, routeId: 'route_016',
-    departureTime: '17:00', arrivalTime: '17:55', fare: 40, active: true,
-  },
-
-  // ── route_017: RTC Complex → Anakapalle (50 km) ───────────────────────────
-  {
-    id: 'bus_034', busId: 'bus_034', busNumber: 'AP39V-1111',
-    busType: 'Ordinary', capacity: 55, routeId: 'route_017',
-    departureTime: '07:00', arrivalTime: '08:30', fare: 60, active: true,
-  },
-  {
-    id: 'bus_035', busId: 'bus_035', busNumber: 'AP39V-2222',
-    busType: 'Express', capacity: 45, routeId: 'route_017',
-    departureTime: '13:00', arrivalTime: '14:15', fare: 80, active: true,
-  },
-
-  // ── route_018: Anakapalle → RTC Complex (50 km) ───────────────────────────
-  {
-    id: 'bus_036', busId: 'bus_036', busNumber: 'AP39V-3333',
-    busType: 'Ordinary', capacity: 55, routeId: 'route_018',
-    departureTime: '06:00', arrivalTime: '07:30', fare: 60, active: true,
-  },
-  {
-    id: 'bus_037', busId: 'bus_037', busNumber: 'AP39V-4444',
-    busType: 'Express', capacity: 45, routeId: 'route_018',
-    departureTime: '17:00', arrivalTime: '18:15', fare: 80, active: true,
-  },
-
-  // ── route_019: RTC Complex → Bhimili (24 km) ─────────────────────────────
-  {
-    id: 'bus_038', busId: 'bus_038', busNumber: 'AP39Z-0011',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_019',
-    departureTime: '08:30', arrivalTime: '09:35', fare: 30, active: true,
-  },
-  {
-    id: 'bus_039', busId: 'bus_039', busNumber: 'AP39Z-0022',
-    busType: 'Express', capacity: 45, routeId: 'route_019',
-    departureTime: '14:00', arrivalTime: '14:55', fare: 40, active: true,
-  },
-
-  // ── route_020: Bhimili → RTC Complex (24 km) ─────────────────────────────
-  {
-    id: 'bus_040', busId: 'bus_040', busNumber: 'AP39Z-0033',
-    busType: 'Ordinary', capacity: 60, routeId: 'route_020',
-    departureTime: '07:00', arrivalTime: '08:05', fare: 30, active: true,
-  },
-  {
-    id: 'bus_041', busId: 'bus_041', busNumber: 'AP39Z-0044',
-    busType: 'Express', capacity: 45, routeId: 'route_020',
-    departureTime: '17:00', arrivalTime: '17:55', fare: 40, active: true,
-  },
-
-  // ── route_021: Gajuwaka → Anakapalle (40 km) ─────────────────────────────
-  {
-    id: 'bus_042', busId: 'bus_042', busNumber: 'AP39X-9999',
-    busType: 'Ordinary', capacity: 55, routeId: 'route_021',
-    departureTime: '07:30', arrivalTime: '08:45', fare: 50, active: true,
-  },
-  {
-    id: 'bus_043', busId: 'bus_043', busNumber: 'AP39X-0001',
-    busType: 'Express', capacity: 45, routeId: 'route_021',
-    departureTime: '16:00', arrivalTime: '17:05', fare: 65, active: true,
-  },
-
-];
+const buses = [];
+routes.forEach((route) => {
+  let startHour = 5 + Math.floor(Math.random() * 3);
+  for (let b = 1; b <= 10; b++) {
+    let currentHour = startHour + Math.floor(b * 1.5);
+    let currentMinute = Math.random() > 0.5 ? 0 : 30;
+    if (currentHour >= 24) currentHour = currentHour % 24;
+    const departureTime = currentHour.toString().padStart(2, '0') + ':' + currentMinute.toString().padStart(2, '0');
+    const arrivalHour = (currentHour + 1 + Math.floor(Math.random() * 2)) % 24;
+    const arrivalTime = arrivalHour.toString().padStart(2, '0') + ':' + currentMinute.toString().padStart(2, '0');
+    const busNumStr = (1000 + Math.floor(Math.random() * 9000)).toString();
+    const busId = `${route.routeId}_bus_${b}`;
+    buses.push({
+      id: busId,
+      busId: busId,
+      busNumber: `AP39Z-${busNumStr}`,
+      busType: Math.random() > 0.5 ? 'Ordinary' : 'Express',
+      capacity: 40,
+      routeId: route.routeId,
+      departureTime: departureTime,
+      arrivalTime: arrivalTime,
+      fare: 30 + Math.floor(Math.random() * 30),
+      active: true,
+    });
+  }
+});
 
 // ─── SEED ─────────────────────────────────────────────────────────────────────
 
