@@ -13,10 +13,9 @@ import 'package:easy_ride/screens/passenger/my_tickets_screen.dart';
 import 'package:easy_ride/screens/conductor/dashboard_screen.dart';
 import 'package:easy_ride/screens/conductor/qr_scanner_screen.dart';
 import 'package:easy_ride/screens/conductor/ticket_verification_screen.dart';
-import 'package:easy_ride/screens/conductor/manual_ticket_screen.dart';
 import 'package:easy_ride/screens/admin/dashboard_screen.dart';
 import 'package:easy_ride/screens/admin/route_analytics_screen.dart';
-import 'package:easy_ride/screens/admin/ticketless_monitor_screen.dart';
+import 'package:easy_ride/screens/admin/unverified_tickets_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -65,9 +64,6 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => const TicketVerificationScreen());
 
-      case RouteConstants.manualTicket:
-        return MaterialPageRoute(builder: (_) => const ManualTicketScreen());
-
       // Admin routes
       case RouteConstants.adminDashboard:
         return MaterialPageRoute(builder: (_) => const AdminDashboardScreen());
@@ -75,9 +71,9 @@ class AppRouter {
       case RouteConstants.routeAnalytics:
         return MaterialPageRoute(builder: (_) => const RouteAnalyticsScreen());
 
-      case RouteConstants.ticketlessMonitor:
+      case RouteConstants.unverifiedTickets:
         return MaterialPageRoute(
-            builder: (_) => const TicketlessMonitorScreen());
+            builder: (_) => const UnverifiedTicketsScreen());
 
       // Default route
       default:

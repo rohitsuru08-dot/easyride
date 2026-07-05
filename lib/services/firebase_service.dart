@@ -152,6 +152,23 @@ class FirebaseService {
     }
   }
 
+  // Get unverified tickets
+  Future<List<TicketModel>> getUnverifiedTickets() async {
+    try {
+      final snapshot = await _firestore
+          .collection(FirestoreConstants.ticketsCollection)
+          .where('verified', isEqualTo: false)
+          .where('status', isEqualTo: 'booked')
+          .get();
+
+      return snapshot.docs
+          .map((doc) => TicketModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to get unverified tickets: $e');
+    }
+  }
+
   // ============ ROUTE OPERATIONS ============
 
   // Get all active routes
@@ -250,6 +267,21 @@ class FirebaseService {
       return 0;
     }
   }
+
+  // Get total verified ticket count
+  Future<int> getTotalVerifiedTicketCount() async {
+    try {
+      final snapshot = await _firestore
+          .collection(FirestoreConstants.ticketsCollection)
+          .where('verified', isEqualTo: true)
+          .count()
+          .get();
+      return snapshot.count ?? 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
 
   // Get total revenue
   Future<double> getTotalRevenue() async {

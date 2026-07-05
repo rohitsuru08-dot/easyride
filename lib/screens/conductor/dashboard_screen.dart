@@ -433,15 +433,6 @@ class _ConductorDashboardScreenState extends State<ConductorDashboardScreen>
         subtitle: 'Verify QR code',
         onTap: () => Navigator.of(context).pushNamed(RouteConstants.qrScanner),
       ),
-      _ActionItem(
-        label: 'manual_ticket'.tr(context),
-        icon: Icons.confirmation_number_rounded,
-        gradientColors: const [Color(0xFF10B981), Color(0xFF059669)],
-        glowColor: const Color(0xFF10B981),
-        subtitle: 'Cash payment',
-        onTap: () =>
-            Navigator.of(context).pushNamed(RouteConstants.manualTicket),
-      ),
     ];
 
     return GridView.builder(

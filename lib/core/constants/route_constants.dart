@@ -17,10 +17,9 @@ class RouteConstants {
   static const String conductorDashboard = '/conductor/dashboard';
   static const String qrScanner = '/conductor/qr-scanner';
   static const String ticketVerification = '/conductor/ticket-verification';
-  static const String manualTicket = '/conductor/manual-ticket';
   
   // Admin Routes
   static const String adminDashboard = '/admin/dashboard';
   static const String routeAnalytics = '/admin/route-analytics';
-  static const String ticketlessMonitor = '/admin/ticketless-monitor';
+  static const String unverifiedTickets = '/admin/unverified-tickets';
 }

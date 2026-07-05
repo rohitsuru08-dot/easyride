@@ -47,8 +47,8 @@ class AdminProvider with ChangeNotifier {
       // Load total statistics
       _totalTickets = await _firebaseService.getTotalTicketCount();
       _totalRevenue = await _firebaseService.getTotalRevenue();
-      _totalPassengers = _totalTickets; // Assuming 1 ticket = 1 passenger
-      _totalTrips = (_totalTickets / 30).ceil(); // Estimated trips
+      _totalPassengers = await _firebaseService.getTotalVerifiedTicketCount();
+      _totalTrips = 0; // Deprecated, removing from UI.
 
       // Load today's tickets
       _todayTickets = await _firebaseService.getTodayTickets();
@@ -121,18 +121,52 @@ class AdminProvider with ChangeNotifier {
     };
   }
 
-  // Get ticketless travel detection (mock data for MVP)
-  Map<String, dynamic> getTicketlessDetection() {
-    // Mock data - in production, this would come from conductor reports
-    return {
-      'highRiskRoutes': [
-        {'route': 'Visakhapatnam → Bhimavaram', 'riskPercentage': 12},
-        {'route': 'Vijayawada → Guntur', 'riskPercentage': 8},
-        {'route': 'Tirupati → Chennai', 'riskPercentage': 15},
-      ],
-      'averageDetectionRate': 8.5,
-      'totalReported': (_todayTickets.length * 0.08).round(),
-    };
+  // Get unverified tickets summary
+  Future<List<Map<String, dynamic>>> getUnverifiedTicketsSummary() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final tickets = await _firebaseService.getUnverifiedTickets();
+      
+      // Group by busNumber and date string
+      final grouped = <String, Map<String, dynamic>>{};
+      
+      for (final ticket in tickets) {
+        final dateStr = "${ticket.journeyDate.year}-${ticket.journeyDate.month.toString().padLeft(2, '0')}-${ticket.journeyDate.day.toString().padLeft(2, '0')}";
+        final key = "${ticket.busNumber}_$dateStr";
+        
+        if (!grouped.containsKey(key)) {
+          grouped[key] = {
+            'busNumber': ticket.busNumber,
+            'routeId': ticket.routeId,
+            'source': ticket.source,
+            'destination': ticket.destination,
+            'journeyDate': ticket.journeyDate,
+            'count': 0,
+          };
+        }
+        grouped[key]!['count'] = (grouped[key]!['count'] as int) + 1;
+      }
+      
+      _isLoading = false;
+      notifyListeners();
+      
+      final result = grouped.values.toList();
+      result.sort((a, b) {
+        final dateA = a['journeyDate'] as DateTime;
+        final dateB = b['journeyDate'] as DateTime;
+        final dateComp = dateB.compareTo(dateA); // Newest first
+        if (dateComp != 0) return dateComp;
+        return (b['count'] as int).compareTo(a['count'] as int);
+      });
+      return result;
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = e.toString();
+      notifyListeners();
+      return [];
+    }
   }
 
   // Refresh all data

@@ -395,13 +395,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
         glow: const Color(0xFFF59E0B),
       ),
       _StatData(
-        label: 'total_trips'.tr(context),
-        value: adminProvider.totalTrips.toString(),
-        icon: Icons.directions_bus_rounded,
-        colors: const [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-        glow: const Color(0xFF8B5CF6),
-      ),
-      _StatData(
         label: 'Today Tickets',
         value: adminProvider.todayTickets.length.toString(),
         icon: Icons.today_rounded,
@@ -622,13 +615,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
             ),
             _buildNavCard(
               context,
-              label: 'ticketless_monitor'.tr(context),
-              subtitle: 'Risk detection',
-              icon: Icons.warning_amber_rounded,
-              gradientColors: const [Color(0xFFEF4444), Color(0xFFDC2626)],
-              glowColor: const Color(0xFFEF4444),
+              label: 'Tickets Unverified',
+              subtitle: 'Check unverified tickets',
+              icon: Icons.fact_check_outlined,
+              gradientColors: const [Color(0xFFF59E0B), Color(0xFFD97706)],
+              glowColor: const Color(0xFFF59E0B),
               onTap: () =>
-                  Navigator.of(context).pushNamed(RouteConstants.ticketlessMonitor),
+                  Navigator.of(context).pushNamed(RouteConstants.unverifiedTickets),
             ),
           ],
         ),
