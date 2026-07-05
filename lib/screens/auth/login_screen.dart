@@ -143,6 +143,92 @@ class _LoginScreenState extends State<LoginScreen>
     await _loadUserAndNavigate(userProvider, authProvider, email);
   }
 
+  void _showForgotPasswordDialog() {
+    final emailController = TextEditingController(text: _emailController.text);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.bgSecondary,
+          title: Text(
+            'Reset Password',
+            style: AppTypography.titleMedium.copyWith(color: AppColors.textPrimary),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Enter your email to receive a password reset link.',
+                style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary),
+                decoration: InputDecoration(
+                  hintText: 'Email address',
+                  hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.textTertiary),
+                  filled: true,
+                  fillColor: AppColors.bgPrimary,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: AppTypography.labelMedium.copyWith(color: AppColors.textTertiary),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final email = emailController.text.trim();
+                if (email.isEmpty || !email.contains('@')) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter a valid email.')),
+                  );
+                  return;
+                }
+                Navigator.pop(context); // close dialog
+                
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                final success = await authProvider.sendPasswordResetEmail(email);
+                
+                if (!mounted) return;
+                
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Password reset link sent! Check your email.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  MessageDialog.showError(
+                    context,
+                    message: authProvider.errorMessage ?? 'Failed to send reset email.',
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.liquidCyan,
+                foregroundColor: Colors.black,
+              ),
+              child: const Text('Send Link'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _signInWithGoogle() async {
     setState(() => _isLoading = true);
 
@@ -496,7 +582,29 @@ class _LoginScreenState extends State<LoginScreen>
                 },
               ),
 
-              const SizedBox(height: 28),
+              if (!_isRegisterMode) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: _showForgotPasswordDialog,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      'Forgot Password?',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.liquidCyan,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ] else ...[
+                const SizedBox(height: 28),
+              ],
 
               // Action button
               LiquidGlassButton(

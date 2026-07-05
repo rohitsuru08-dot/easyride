@@ -86,6 +86,25 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      _status = AuthStatus.loading;
+      _errorMessage = null;
+      notifyListeners();
+
+      await _authService.sendPasswordResetEmail(email);
+
+      _status = AuthStatus.initial;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _status = AuthStatus.error;
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> signInWithGoogle() async {
     try {
       _status = AuthStatus.loading;

@@ -180,6 +180,22 @@ class AuthService {
     }
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email.trim());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw Exception('No account found for this email.');
+      } else if (e.code == 'invalid-email') {
+        throw Exception('Invalid email address.');
+      } else {
+        throw Exception('[${e.code}] ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('Failed to send reset email: $e');
+    }
+  }
+
   // ─── GOOGLE SIGN-IN ──────────────────────────────────────────────────────────
 
   Future<UserCredential> signInWithGoogle() async {

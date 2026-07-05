@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "832583492226",
+    "project_id": "easyride-81df0",
+    "storage_bucket": "easyride-81df0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832583492226:android:4e837db22cb1fef9630a9b",
+        "android_client_info": {
+          "package_name": "com.apsrtc.easyride"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832583492226-3l67vae88dc8a06asslnjrnh4tdcu280.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apsrtc.easyride",
+            "certificate_hash": "fb245b7d5e4bed398bdcdcb80ff232b84eff83ca"
+          }
+        },
+        {
+          "client_id": "832583492226-2j6fm786qvd46tia1pbq8f7dkq3lvknu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzp1tE1KSI9FhpEBEW838ptN_moKFqNOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832583492226-2j6fm786qvd46tia1pbq8f7dkq3lvknu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
