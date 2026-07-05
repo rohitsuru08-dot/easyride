@@ -13,6 +13,8 @@ import 'package:easy_ride/widgets/common/message_dialog.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:easy_ride/core/utils/date_time_helper.dart';
+import 'package:easy_ride/widgets/animations/parallax_header.dart';
+import 'package:easy_ride/widgets/animations/portal_lottie_header.dart';
 
 class PassengerHomeScreen extends StatefulWidget {
   const PassengerHomeScreen({Key? key}) : super(key: key);
@@ -33,6 +35,8 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
   late AnimationController _staggerController;
   late List<Animation<double>> _staggerFades;
   late List<Animation<Offset>> _staggerSlides;
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -84,6 +88,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
   void dispose() {
     _timeTimer?.cancel();
     _staggerController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -194,15 +199,44 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
                   color: AppColors.liquidCyan,
                   backgroundColor: AppColors.bgSecondary,
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // Lottie & Parallax Header
+                        _buildAnimated(
+                          0, 
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                            child: ParallaxHeader(
+                              scrollController: _scrollController,
+                              height: 180,
+                              background: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFF2C147B), Color(0xFF140A3D)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                              ),
+                              content: const PortalAnimatedHeader(
+                                icon: Icons.directions_bus_filled_rounded,
+                                height: 180,
+                                title: 'Ready for\nyour ride?',
+                                subtitle: 'Find the best buses.',
+                              ),
+                            ),
+                          )
+                        ),
+                        const SizedBox(height: 16),
                         // Hero section
-                        _buildAnimated(0, _buildHeroSection(userProvider)),
+                        _buildAnimated(1, _buildHeroSection(userProvider)),
                         // Search card
                         _buildAnimated(
-                          1,
+                          2,
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                             child: _buildSearchCard(
@@ -212,7 +246,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
                         const SizedBox(height: 28),
                         // Quick access header
                         _buildAnimated(
-                          2,
+                          3,
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                             child: _buildSectionHeader('Quick Access', Icons.grid_view_rounded),
@@ -221,7 +255,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
                         const SizedBox(height: 16),
                         // Quick access grid
                         _buildAnimated(
-                          3,
+                          4,
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                             child: _buildQuickAccessGrid(context),

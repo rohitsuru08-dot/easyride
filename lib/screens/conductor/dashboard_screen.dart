@@ -9,6 +9,8 @@ import 'package:easy_ride/providers/auth_provider.dart';
 import 'package:easy_ride/providers/user_provider.dart';
 import 'package:easy_ride/localization/localization_service.dart';
 import 'package:easy_ride/widgets/common/message_dialog.dart';
+import 'package:easy_ride/widgets/animations/parallax_header.dart';
+import 'package:easy_ride/widgets/animations/portal_lottie_header.dart';
 
 class ConductorDashboardScreen extends StatefulWidget {
   const ConductorDashboardScreen({Key? key}) : super(key: key);
@@ -23,6 +25,8 @@ class _ConductorDashboardScreenState extends State<ConductorDashboardScreen>
   late AnimationController _controller;
   late List<Animation<double>> _cardFades;
   late List<Animation<Offset>> _cardSlides;
+  
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -64,6 +68,7 @@ class _ConductorDashboardScreenState extends State<ConductorDashboardScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -118,6 +123,7 @@ class _ConductorDashboardScreenState extends State<ConductorDashboardScreen>
             color: AppColors.liquidCyan,
             backgroundColor: const Color(0xFF192134),
             child: SingleChildScrollView(
+              controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
               child: Column(
@@ -125,6 +131,31 @@ class _ConductorDashboardScreenState extends State<ConductorDashboardScreen>
               children: [
                 // Top bar
                 _animated(0, _buildTopBar(context)),
+                const SizedBox(height: 24),
+
+                // Lottie & Parallax Header
+                _animated(0, 
+                  ParallaxHeader(
+                    scrollController: _scrollController,
+                    height: 180,
+                    background: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF1E3A8A), Color(0xFF0F172A)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                    ),
+                    content: const PortalAnimatedHeader(
+                      icon: Icons.qr_code_scanner_rounded,
+                      height: 180,
+                      title: 'Verify\nTickets',
+                      subtitle: 'Scan QR codes quickly.',
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 24),
 
                 // Welcome

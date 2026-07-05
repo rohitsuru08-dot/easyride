@@ -8,6 +8,8 @@ import 'package:easy_ride/providers/admin_provider.dart';
 import 'package:easy_ride/providers/auth_provider.dart';
 import 'package:easy_ride/localization/localization_service.dart';
 import 'package:easy_ride/widgets/common/message_dialog.dart';
+import 'package:easy_ride/widgets/animations/parallax_header.dart';
+import 'package:easy_ride/widgets/animations/portal_lottie_header.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({Key? key}) : super(key: key);
@@ -21,6 +23,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   late AnimationController _controller;
   late List<Animation<double>> _fades;
   late List<Animation<Offset>> _slides;
+  
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -54,6 +58,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -110,6 +115,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   color: AppColors.liquidCyan,
                   backgroundColor: AppColors.bgSecondary,
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: EdgeInsets.fromLTRB(
                       16, 16, 16,
@@ -120,6 +126,31 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                       children: [
                         // Top bar
                         _animated(0, _buildTopBar()),
+                        const SizedBox(height: 24),
+
+                        // Lottie & Parallax Header
+                        _animated(0, 
+                          ParallaxHeader(
+                            scrollController: _scrollController,
+                            height: 180,
+                            background: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24),
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF831843), Color(0xFF0F172A)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
+                            content: const PortalAnimatedHeader(
+                              icon: Icons.analytics_rounded,
+                              height: 180,
+                              title: 'Live\nMetrics',
+                              subtitle: 'Monitor network status.',
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 24),
 
                         // Hero summary
