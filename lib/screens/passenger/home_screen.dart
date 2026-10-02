@@ -102,7 +102,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
@@ -318,6 +318,33 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen>
             ),
           ),
           const Spacer(),
+          // Wallet Balance
+          if (userProvider.currentUser != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              margin: const EdgeInsets.only(right: 12),
+              decoration: BoxDecoration(
+                color: AppColors.liquidCyan.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.liquidCyan.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.account_balance_wallet_rounded, color: AppColors.liquidCyan, size: 16),
+                  const SizedBox(width: 6),
+                  Text(
+                    '₹${userProvider.currentUser!.walletBalance.toStringAsFixed(0)}',
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.liquidCyan,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           // Logout button
           GestureDetector(
             onTap: _logout,

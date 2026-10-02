@@ -23,6 +23,7 @@ class BookingSummaryScreen extends StatefulWidget {
 class _BookingSummaryScreenState extends State<BookingSummaryScreen>
     with SingleTickerProviderStateMixin {
   String _selectedPassengerType = 'Adult';
+  bool _useWallet = false;
   final TextEditingController _mobileController = TextEditingController();
   late AnimationController _controller;
   late Animation<double> _fadeIn;
@@ -87,12 +88,15 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
       journeyDate: routeProvider.selectedDate!,
       passengerType: _selectedPassengerType,
       mobileNumber: _mobileController.text.trim().isEmpty ? null : _mobileController.text.trim(),
+      useWallet: _useWallet,
     );
 
     if (!mounted) return;
     Navigator.of(context).pop(); // Close loading dialog
 
     if (ticket != null) {
+      await userProvider.loadUser(userProvider.currentUser!.userId);
+
       MessageDialog.showSuccess(
         context,
         title: 'booking_confirmed'.tr(context),
@@ -164,6 +168,13 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
 
                         // Mobile number
                         _buildMobileNumberCard(),
+                        const SizedBox(height: 16),
+
+                        // Wallet
+                        _buildWalletCard(
+                          bus.fare, 
+                          Provider.of<UserProvider>(context).currentUser?.walletBalance ?? 0.0
+                        ),
                         const SizedBox(height: 16),
 
                         // Fare summary
@@ -489,6 +500,60 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildWalletCard(double busFare, double walletBalance) {
+    bool canUseWallet = walletBalance >= busFare;
+    return _buildSectionCard(
+      title: 'Wallet',
+      icon: Icons.account_balance_wallet_rounded,
+      accentColor: AppColors.liquidCyan,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Wallet Balance',
+                style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary),
+              ),
+              Text(
+                '₹${walletBalance.toStringAsFixed(2)}',
+                style: AppTypography.titleMedium.copyWith(
+                  color: AppColors.liquidCyan,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          if (canUseWallet)
+            CheckboxListTile(
+              title: Text('Pay with Wallet', style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary)),
+              value: _useWallet,
+              onChanged: (val) {
+                setState(() {
+                  _useWallet = val ?? false;
+                });
+              },
+              activeColor: AppColors.liquidCyan,
+              checkColor: Colors.white,
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+            )
+          else if (walletBalance > 0)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Insufficient balance to pay for this ticket.',
+                  style: AppTypography.bodySmall.copyWith(color: AppColors.error),
+                ),
+              ),
+            )
+        ],
       ),
     );
   }

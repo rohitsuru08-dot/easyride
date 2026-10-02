@@ -30,11 +30,11 @@ class TicketProvider with ChangeNotifier {
     );
     _upcomingTickets = _tickets.where((t) {
       final d = DateTime(t.journeyDate.year, t.journeyDate.month, t.journeyDate.day);
-      return !d.isBefore(today) && !t.verified;
+      return !d.isBefore(today) && !t.verified && t.status != 'cancelled';
     }).toList();
     _historyTickets = _tickets.where((t) {
       final d = DateTime(t.journeyDate.year, t.journeyDate.month, t.journeyDate.day);
-      return d.isBefore(today) || t.verified;
+      return d.isBefore(today) || t.verified || t.status == 'cancelled';
     }).toList();
   }
 
@@ -75,6 +75,7 @@ class TicketProvider with ChangeNotifier {
     required DateTime journeyDate,
     String passengerType = 'Adult',
     String? mobileNumber,
+    bool useWallet = false,
   }) async {
     try {
       _isLoading = true;
@@ -99,9 +100,13 @@ class TicketProvider with ChangeNotifier {
         bookingTime: DateTime.now(),
         journeyDate: journeyDate,
         passengerType: passengerType,
-        paymentMode: 'Online',
+        paymentMode: useWallet ? 'Wallet' : 'Online',
         mobileNumber: mobileNumber,
       );
+
+      if (useWallet) {
+        await _firebaseService.updateWalletBalance(passengerId, -bus.fare);
+      }
 
       await _firebaseService.createTicket(ticket);
       _currentTicket = ticket;
@@ -120,6 +125,58 @@ class TicketProvider with ChangeNotifier {
       _errorMessage = e.toString();
       notifyListeners();
       return null;
+    }
+  }
+
+  // Cancel a ticket
+  Future<bool> cancelTicket(TicketModel ticket) async {
+    try {
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+
+      // Check time constraint: can only cancel if >= 1 hour before departure
+      final now = DateTime.now();
+      
+      // Parse departure time (HH:mm)
+      final parts = ticket.departureTime.split(':');
+      final departureHour = int.parse(parts[0]);
+      final departureMinute = int.parse(parts[1]);
+      
+      final departureDateTime = DateTime(
+        ticket.journeyDate.year,
+        ticket.journeyDate.month,
+        ticket.journeyDate.day,
+        departureHour,
+        departureMinute,
+      );
+      
+      final difference = departureDateTime.difference(now);
+      
+      if (difference.inMinutes < 15) {
+        _errorMessage = 'Tickets can only be cancelled up to 15 minutes before departure';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+      
+      // Update ticket status
+      await _firebaseService.cancelTicket(ticket.ticketId);
+      
+      // Refund money to wallet
+      await _firebaseService.updateWalletBalance(ticket.passengerId, ticket.fare);
+      
+      // Reload tickets to update UI
+      await loadUserTickets(ticket.passengerId);
+      
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
     }
   }
 

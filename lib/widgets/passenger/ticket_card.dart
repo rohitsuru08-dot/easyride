@@ -19,6 +19,7 @@ class TicketCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isPastTicket = DateTimeHelper.isPast(ticket.journeyDate);
     final isToday = DateTimeHelper.isToday(ticket.journeyDate);
+    final isCancelled = ticket.status == 'cancelled';
 
     return FadeInAnimation(
       duration: const Duration(milliseconds: 500),
@@ -67,7 +68,7 @@ class TicketCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    _buildStatusBadge(isPastTicket, isToday),
+                    _buildStatusBadge(isPastTicket, isToday, isCancelled),
                   ],
                 ),
                 const SizedBox(height: AppConstants.spacing16),
@@ -227,13 +228,18 @@ class TicketCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(bool isPast, bool isToday) {
+  Widget _buildStatusBadge(bool isPast, bool isToday, bool isCancelled) {
     Color badgeColor;
     Color textColor;
     String statusText;
     IconData statusIcon;
 
-    if (isPast) {
+    if (isCancelled) {
+      badgeColor = AppConstants.errorColor;
+      textColor = Colors.white;
+      statusText = 'Cancelled';
+      statusIcon = Icons.cancel_rounded;
+    } else if (isPast) {
       badgeColor = AppConstants.textSecondary;
       textColor = Colors.white;
       statusText = 'Completed';

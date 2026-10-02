@@ -52,6 +52,18 @@ class FirebaseService {
     }
   }
 
+  // Update wallet balance
+  Future<void> updateWalletBalance(String userId, double amount) async {
+    try {
+      await _firestore
+          .collection(FirestoreConstants.usersCollection)
+          .doc(userId)
+          .update({'walletBalance': FieldValue.increment(amount)});
+    } catch (e) {
+      throw Exception('Failed to update wallet balance: $e');
+    }
+  }
+
   // ============ TICKET OPERATIONS ============
 
   // Create new ticket — use ticketId as document ID so getTicket/verifyTicket
@@ -133,6 +145,20 @@ class FirebaseService {
       });
     } catch (e) {
       throw Exception('Failed to verify ticket: $e');
+    }
+  }
+
+  // Cancel ticket
+  Future<void> cancelTicket(String ticketId) async {
+    try {
+      await _firestore
+          .collection(FirestoreConstants.ticketsCollection)
+          .doc(ticketId)
+          .update({
+        FirestoreConstants.ticketStatus: FirestoreConstants.statusCancelled,
+      });
+    } catch (e) {
+      throw Exception('Failed to cancel ticket: $e');
     }
   }
 

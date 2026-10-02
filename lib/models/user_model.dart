@@ -7,6 +7,7 @@ class UserModel {
   final String phone;
   final String role; // 'passenger', 'conductor', 'admin'
   final String language; // 'en' or 'te'
+  final double walletBalance;
   final DateTime createdAt;
 
   UserModel({
@@ -15,6 +16,7 @@ class UserModel {
     required this.phone,
     required this.role,
     this.language = 'en',
+    this.walletBalance = 0.0,
     required this.createdAt,
   });
 
@@ -26,6 +28,7 @@ class UserModel {
       phone: map['phone'] ?? '',
       role: map['role'] ?? 'passenger',
       language: map['language'] ?? 'en',
+      walletBalance: (map['walletBalance'] ?? 0).toDouble(),
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -38,6 +41,7 @@ class UserModel {
       'phone': phone,
       'role': role,
       'language': language,
+      'walletBalance': walletBalance,
       'createdAt': Timestamp.fromDate(createdAt),
     };
   }
@@ -49,6 +53,7 @@ class UserModel {
     String? phone,
     String? role,
     String? language,
+    double? walletBalance,
     DateTime? createdAt,
   }) {
     return UserModel(
@@ -57,12 +62,13 @@ class UserModel {
       phone: phone ?? this.phone,
       role: role ?? this.role,
       language: language ?? this.language,
+      walletBalance: walletBalance ?? this.walletBalance,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(userId: $userId, name: $name, phone: $phone, role: $role)';
+    return 'UserModel(userId: $userId, name: $name, phone: $phone, role: $role, walletBalance: $walletBalance)';
   }
 }

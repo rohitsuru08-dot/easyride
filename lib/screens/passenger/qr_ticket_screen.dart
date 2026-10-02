@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:easy_ride/core/constants/app_constants.dart';
 import 'package:easy_ride/core/utils/date_time_helper.dart';
 import 'package:easy_ride/providers/ticket_provider.dart';
+import 'package:easy_ride/providers/user_provider.dart';
 import 'package:easy_ride/services/qr_service.dart';
 import 'package:easy_ride/localization/localization_service.dart';
 import 'package:easy_ride/widgets/design_system.dart';
@@ -86,15 +87,21 @@ class QRTicketScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'booking_confirmed'.tr(context),
+                      ticket.status == 'cancelled' 
+                          ? 'Ticket Cancelled' 
+                          : 'booking_confirmed'.tr(context),
                       style: AppConstants.displayMedium.copyWith(
-                        color: AppConstants.successColor,
+                        color: ticket.status == 'cancelled' 
+                            ? AppConstants.errorColor 
+                            : AppConstants.successColor,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: AppConstants.spacing8),
                     Text(
-                      'Your digital ticket is ready',
+                      ticket.status == 'cancelled'
+                          ? 'Your fare has been refunded to your wallet.'
+                          : 'Your digital ticket is ready',
                       style: AppConstants.bodyMedium.copyWith(
                         color: AppConstants.textSecondary,
                       ),
@@ -397,65 +404,66 @@ class QRTicketScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: AppConstants.spacing20),
 
-                        // QR Code with glassmorphism
-                        FadeInAnimation(
-                          duration: const Duration(milliseconds: 1000),
-                          child: GlassmorphismCard(
-                            child: Container(
-                              padding: const EdgeInsets.all(AppConstants.spacing16),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Digital Ticket',
-                                    style: AppConstants.labelMedium.copyWith(
-                                      color: AppConstants.textSecondary,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: AppConstants.spacing12),
-                                  Container(
-                                    padding: const EdgeInsets.all(
-                                      AppConstants.spacing12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(
-                                        AppConstants.borderRadius12,
-                                      ),
-                                      border: Border.all(
-                                        color: AppConstants.primaryBlue
-                                            .withValues(alpha: 0.3),
-                                        width: 2.0,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppConstants.primaryBlue
-                                              .withValues(alpha: 0.1),
-                                          blurRadius: 15,
-                                          offset: const Offset(0, 4),
+                          // QR Code with glassmorphism
+                          if (ticket.status != 'cancelled')
+                            FadeInAnimation(
+                              duration: const Duration(milliseconds: 1000),
+                              child: GlassmorphismCard(
+                                child: Container(
+                                  padding: const EdgeInsets.all(AppConstants.spacing16),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Digital Ticket',
+                                        style: AppConstants.labelMedium.copyWith(
+                                          color: AppConstants.textSecondary,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                      ],
-                                    ),
-                                    child: QrImageView(
-                                      data: qrData,
-                                      version: QrVersions.auto,
-                                      size: AppConstants.qrCodeSize,
-                                    ),
+                                      ),
+                                      const SizedBox(height: AppConstants.spacing12),
+                                      Container(
+                                        padding: const EdgeInsets.all(
+                                          AppConstants.spacing12,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            AppConstants.borderRadius12,
+                                          ),
+                                          border: Border.all(
+                                            color: AppConstants.primaryBlue
+                                                .withValues(alpha: 0.3),
+                                            width: 2.0,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppConstants.primaryBlue
+                                                  .withValues(alpha: 0.1),
+                                              blurRadius: 15,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: QrImageView(
+                                          data: qrData,
+                                          version: QrVersions.auto,
+                                          size: AppConstants.qrCodeSize,
+                                        ),
+                                      ),
+                                      const SizedBox(height: AppConstants.spacing12),
+                                      Text(
+                                        'Show this QR code to conductor',
+                                        style: AppConstants.labelSmall.copyWith(
+                                          color: AppConstants.textSecondary,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: AppConstants.spacing12),
-                                  Text(
-                                    'Show this QR code to conductor',
-                                    style: AppConstants.labelSmall.copyWith(
-                                      color: AppConstants.textSecondary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -536,6 +544,51 @@ class QRTicketScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: AppConstants.spacing32),
+              
+              if (ticket.status != 'cancelled' && !ticket.verified)
+                ScaleInAnimation(
+                  duration: const Duration(milliseconds: 1200),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final userProvider = Provider.of<UserProvider>(context, listen: false);
+                        final success = await ticketProvider.cancelTicket(ticket);
+                        if (success) {
+                          // Refresh wallet balance
+                          if (userProvider.currentUser != null) {
+                            await userProvider.loadUser(userProvider.currentUser!.userId);
+                          }
+                          
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Ticket cancelled successfully. Refund added to wallet.')),
+                            );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(ticketProvider.errorMessage ?? 'Failed to cancel ticket.')),
+                            );
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppConstants.errorColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppConstants.borderRadius12),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel Ticket',
+                        style: AppConstants.labelLarge.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              
               const SizedBox(height: AppConstants.spacing32),
             ],
           ),

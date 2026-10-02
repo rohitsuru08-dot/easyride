@@ -148,6 +148,13 @@ class ConductorProvider with ChangeNotifier {
         return false;
       }
 
+      if (ticket.status == 'cancelled') {
+        _errorMessage = 'Ticket is cancelled';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
       // Verify the ticket in Firestore
       await _firebaseService.verifyTicket(ticketId, conductorId);
       await LocalStorageService.saveVerifiedTicket(ticketId);
