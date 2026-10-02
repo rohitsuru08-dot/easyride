@@ -23,6 +23,7 @@ class BookingSummaryScreen extends StatefulWidget {
 class _BookingSummaryScreenState extends State<BookingSummaryScreen>
     with SingleTickerProviderStateMixin {
   String _selectedPassengerType = 'Adult';
+  final TextEditingController _mobileController = TextEditingController();
   late AnimationController _controller;
   late Animation<double> _fadeIn;
   late Animation<Offset> _slideUp;
@@ -45,6 +46,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
 
   @override
   void dispose() {
+    _mobileController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -84,6 +86,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
       destination: routeProvider.selectedDestination!,
       journeyDate: routeProvider.selectedDate!,
       passengerType: _selectedPassengerType,
+      mobileNumber: _mobileController.text.trim().isEmpty ? null : _mobileController.text.trim(),
     );
 
     if (!mounted) return;
@@ -157,6 +160,10 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
 
                         // Passenger type
                         _buildPassengerTypeCard(),
+                        const SizedBox(height: 16),
+
+                        // Mobile number
+                        _buildMobileNumberCard(),
                         const SizedBox(height: 16),
 
                         // Fare summary
@@ -444,6 +451,43 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen>
               });
             }
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileNumberCard() {
+    return _buildSectionCard(
+      title: 'mobile_number'.tr(context),
+      icon: Icons.phone_rounded,
+      accentColor: AppColors.electricPurple,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+        child: TextFormField(
+          controller: _mobileController,
+          keyboardType: TextInputType.phone,
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Enter mobile number (optional)',
+            hintStyle: AppTypography.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            prefixIcon: Icon(Icons.phone_outlined,
+                color: AppColors.electricPurple, size: 20),
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          ),
         ),
       ),
     );

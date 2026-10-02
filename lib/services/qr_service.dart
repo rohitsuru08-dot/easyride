@@ -17,6 +17,7 @@ class QRService {
       'arrivalTime': ticket.arrivalTime,
       'journeyDate': ticket.journeyDate.toIso8601String(),
       'status': ticket.status,
+      if (ticket.mobileNumber != null) 'mobileNumber': ticket.mobileNumber,
     };
 
     // Convert to JSON string for QR code
@@ -136,6 +137,8 @@ class QRService {
         'Arrival': data['arrivalTime'] ?? 'N/A',
         'Fare': '₹${data['fare']}',
         'Status': data['status'] ?? 'N/A',
+        if (data['mobileNumber'] != null && data['mobileNumber'].isNotEmpty)
+          'Mobile': data['mobileNumber'],
       };
     } catch (e) {
       return {};

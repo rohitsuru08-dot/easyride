@@ -74,6 +74,7 @@ class TicketProvider with ChangeNotifier {
     required String destination,
     required DateTime journeyDate,
     String passengerType = 'Adult',
+    String? mobileNumber,
   }) async {
     try {
       _isLoading = true;
@@ -99,6 +100,7 @@ class TicketProvider with ChangeNotifier {
         journeyDate: journeyDate,
         passengerType: passengerType,
         paymentMode: 'Online',
+        mobileNumber: mobileNumber,
       );
 
       await _firebaseService.createTicket(ticket);

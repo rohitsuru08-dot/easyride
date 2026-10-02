@@ -214,6 +214,13 @@ class _TicketVerificationScreenState extends State<TicketVerificationScreen>
                               Icons.person_rounded,
                               AppColors.electricPurple,
                             ),
+                            if (ticket.mobileNumber != null && ticket.mobileNumber!.isNotEmpty)
+                              _buildDetailRow(
+                                'mobile_number'.tr(context),
+                                ticket.mobileNumber!,
+                                Icons.phone_rounded,
+                                AppColors.electricPurple,
+                              ),
                             _buildDetailRow(
                               'Route',
                               '${ticket.source} → ${ticket.destination}',

@@ -21,6 +21,7 @@ class TicketModel {
   final DateTime? verifiedAt;
   final String passengerType; // 'Adult', 'Child', 'Senior Citizen'
   final String paymentMode; // 'Online', 'Cash'
+  final String? mobileNumber;
 
   TicketModel({
     required this.ticketId,
@@ -42,6 +43,7 @@ class TicketModel {
     this.verifiedAt,
     this.passengerType = 'Adult',
     this.paymentMode = 'Online',
+    this.mobileNumber,
   });
 
   // Create TicketModel from Firestore document
@@ -66,6 +68,7 @@ class TicketModel {
       verifiedAt: (map['verifiedAt'] as Timestamp?)?.toDate(),
       passengerType: map['passengerType'] ?? 'Adult',
       paymentMode: map['paymentMode'] ?? 'Online',
+      mobileNumber: map['mobileNumber'],
     );
   }
 
@@ -91,6 +94,7 @@ class TicketModel {
       'verifiedAt': verifiedAt != null ? Timestamp.fromDate(verifiedAt!) : null,
       'passengerType': passengerType,
       'paymentMode': paymentMode,
+      if (mobileNumber != null) 'mobileNumber': mobileNumber,
     };
   }
 
@@ -115,6 +119,7 @@ class TicketModel {
     DateTime? verifiedAt,
     String? passengerType,
     String? paymentMode,
+    String? mobileNumber,
   }) {
     return TicketModel(
       ticketId: ticketId ?? this.ticketId,
@@ -136,6 +141,7 @@ class TicketModel {
       verifiedAt: verifiedAt ?? this.verifiedAt,
       passengerType: passengerType ?? this.passengerType,
       paymentMode: paymentMode ?? this.paymentMode,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
     );
   }
 
@@ -160,6 +166,7 @@ class TicketModel {
       'verifiedAt': verifiedAt?.toIso8601String(),
       'passengerType': passengerType,
       'paymentMode': paymentMode,
+      'mobileNumber': mobileNumber,
     };
   }
 
@@ -190,6 +197,7 @@ class TicketModel {
           : null,
       passengerType: map['passengerType'] ?? 'Adult',
       paymentMode: map['paymentMode'] ?? 'Online',
+      mobileNumber: map['mobileNumber'],
     );
   }
 
